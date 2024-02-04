@@ -3,23 +3,29 @@ package model;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<SubTask> subTasks;
+    private ArrayList<Integer> subTasksId;
+
+    public Epic() {
+    }
+
     public Epic(String name, String description, Status Status) {
         super(name, description, Status);
-        subTasks = new ArrayList<>();
+        subTasksId = new ArrayList<>();
     }
 
-    public ArrayList<SubTask> getSubTasks() {
-        return subTasks;
+    public ArrayList<Integer> getSubTasksId() {
+        return subTasksId;
     }
 
-    public void setSubTasks(ArrayList<SubTask> subTasks) {
-        this.subTasks = subTasks;
+    public void setSubTasksId(ArrayList<Integer> subTasksId) {
+        this.subTasksId = subTasksId;
     }
 
-    public void getAllSubtasksByEpic () {
-        for (SubTask subTask : subTasks) {
-            System.out.println(subTask);
-        }
+    @Override
+    public String toString() {
+        String output = super.toString();
+        return output + "Epic{" +
+                "subTasksId=" + subTasksId +
+                '}';
     }
 }
