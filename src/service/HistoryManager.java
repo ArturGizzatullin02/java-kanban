@@ -3,8 +3,9 @@ package service;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface HistoryManager {
     void addToHistory(Task task);
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

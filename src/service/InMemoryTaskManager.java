@@ -7,6 +7,7 @@ import model.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -38,7 +39,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Status calculateEpicStatus(Epic epic) {
         boolean isNew = true;
         boolean isDone = true;
-        ArrayList<SubTask> subTasksOfEpic = new ArrayList<>();
+        List<SubTask> subTasksOfEpic = new ArrayList<>();
         for (Integer id : epic.getSubTasksId()) {
             subTasksOfEpic.add(subTasks.get(id));
         }
@@ -84,17 +85,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubtasks() {
+    public List<SubTask> getAllSubtasks() {
         return new ArrayList<>(subTasks.values());
     }
 
     @Override
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -178,7 +179,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getAllSubTasksByEpic(Epic epic) {
+    public List<SubTask> getAllSubTasksByEpic(Epic epic) {
         ArrayList<SubTask> subTasksOfEpic = new ArrayList<>();
         for (Integer id : epic.getSubTasksId()) {
             subTasksOfEpic.add(subTasks.get(id));

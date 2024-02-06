@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Task {
     private String name;
     private String description;
@@ -13,12 +15,12 @@ public class Task {
 
         Task task = (Task) o;
 
-        return id == task.id;
+        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(Status, task.Status);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return Objects.hash(name, description, Status);
     }
     public Task() {
 

@@ -3,9 +3,10 @@ package service;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    final ArrayList<Task> history= new ArrayList<>(10);
+    final List<Task> history= new ArrayList<>(10);
     @Override
     public void addToHistory(Task task) {
         if (history.size() == 10) {
@@ -17,7 +18,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         history.add(task);
     }
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
 //        for (Task elem : history) {
 //            System.out.println(elem.getName());
 //        }

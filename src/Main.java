@@ -52,5 +52,7 @@ public class Main {
         System.out.println();
         System.out.println("История:");
         historyManager.getHistory();
+        Epic epic1ww = new Epic("Task1", "Description1", Status.NEW);
+        Epic epic2ww = new Epic("Task2", "Description2", Status.NEW);
     }
 }
