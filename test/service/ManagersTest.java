@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ManagersTest {
     @Test
     void shouldBeNotNullTaskManager() {
-        assertNotNull(Managers.getDefaultTaskManager(Managers.getDefaultHistoryManager()), "Метод должен возвращать объект");
+        assertNotNull(Managers.getDefaultTaskManager(Managers.getDefaultHistoryManager()),
+                "Метод должен возвращать объект");
     }
 
     @Test
