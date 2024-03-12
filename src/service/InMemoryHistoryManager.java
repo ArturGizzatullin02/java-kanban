@@ -2,9 +2,7 @@ package service;
 
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -13,9 +11,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     Node head;
     Node tail;
     public static class Node {
-        static Node next;
-        static Node prev;
-        static Task task;
+        Node next;
+        Node prev;
+        Task task;
 
         public Node(Node next, Task task, Node prev) {
             this.next = next;
@@ -24,8 +22,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    @Override
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         Node oldTail = tail;
         Node newNode = new Node(oldTail, task, null);
         tail = newNode;
@@ -42,8 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         history.put(task.getId(), tail);
     }
 
-    @Override
-    public void removeNode(Node node) {
+    private void removeNode(Node node) {
         Node next = node.next;
         Node prev = node.prev;
         next.prev = prev;
@@ -53,6 +49,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
+        removeNode(history.get(id));
         history.remove(id);
     }
 
@@ -61,13 +58,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         history.clear();
     }
     @Override
-    public List<Task> getHistory() {
-        List<Task> tasks = new ArrayList<>();
-        Node current = head;
-        while (current != null) {
-            tasks.add(current.task);
-            current = current.next;
-        }
-        return tasks;
+    public Map<Integer, Node> getHistory() {
+        return history;
     }
 }
