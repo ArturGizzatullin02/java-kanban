@@ -10,7 +10,7 @@ public class InMemoryHistoryManagerTest {
     Task task = new Task("Task", "Description", Status.NEW);
     @Test
     void name() {
-        historyManager.addToHistory(task);
+        historyManager.add(task);
         assertNotNull(historyManager.getHistory(), "История должна быть не пустой после добавления");
     }
 }

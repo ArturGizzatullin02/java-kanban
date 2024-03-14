@@ -52,8 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         if (isNew) {
-            return Status.NEW; // Если список пустой, то все булевы значения true и вернется первый вариант из if-else
-            // цикла - NEW, как и должно быть по заданию
+            return Status.NEW;
         } else if (isDone) {
             return Status.DONE;
         } else {
@@ -102,21 +101,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getById(int id) {
         Task task = tasks.get(id);
-        historyManager.addToHistory(task);
+        historyManager.add(task);
         return task;
     }
 
     @Override
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
-        historyManager.addToHistory(epic);
+        historyManager.add(epic);
         return epic;
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
         SubTask subTask = subTasks.get(id);
-        historyManager.addToHistory(subTask);
+        historyManager.add(subTask);
         return subTask;
     }
     @Override
@@ -140,6 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteById(int id) {
         tasks.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -147,6 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.clear();
         epics.clear();
         subTasks.clear();
+        historyManager.clear();
     }
 
     @Override
