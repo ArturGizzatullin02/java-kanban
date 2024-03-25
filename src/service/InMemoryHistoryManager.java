@@ -2,14 +2,17 @@ package service;
 
 import model.Task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    final Map<Integer, Node> history= new HashMap<>();
+    final Map<Integer, Node> history = new HashMap<>();
 
     Node head;
     Node tail;
+
     public static class Node {
         Node next;
         Node prev;
@@ -18,13 +21,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         public Node(Node next, Task task, Node prev) {
             this.next = next;
             this.task = task;
-            this.prev  = prev;
+            this.prev = prev;
         }
     }
 
     private void linkLast(Task task) {
         Node oldTail = tail;
-        Node newNode = new Node(oldTail, task, null);
+        Node newNode = new Node(null, task, oldTail);
         tail = newNode;
         if (oldTail == null) {
             head = newNode;
@@ -40,11 +43,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node node) {
-        Node next = node.next;
-        Node prev = node.prev;
-        next.prev = prev;
-        prev.next = next;
-        history.remove(node.task.getId());
+        if (node.next == null) {
+            Node prev = node.prev;
+            tail = prev;
+            prev.next = null;
+        } else {
+            Node next = node.next;
+            Node prev = node.prev;
+            next.prev = prev;
+            prev.next = next;
+        }
     }
 
     @Override
@@ -57,8 +65,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void clear() {
         history.clear();
     }
+
     @Override
-    public Map<Integer, Node> getHistory() {
-        return history;
+    public List<Integer> getHistory() {
+        return new ArrayList<>(history.keySet());
     }
 }
