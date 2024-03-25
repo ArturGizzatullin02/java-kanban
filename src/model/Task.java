@@ -22,6 +22,7 @@ public class Task {
     public int hashCode() {
         return Objects.hash(name, description, Status);
     }
+
     public Task() {
 
     }
@@ -30,6 +31,10 @@ public class Task {
         this.name = name;
         this.description = description;
         this.Status = Status;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -62,6 +67,10 @@ public class Task {
 
     public void setStatus(Status Status) {
         this.Status = Status;
+    }
+
+    public Integer getEpicId() {
+        return null;
     }
 
     @Override
