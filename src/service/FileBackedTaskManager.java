@@ -69,20 +69,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private Task fromString(String value) {
         String[] fields = value.split(",");
-        int idField = 0; // не понял, как сделать через enum и привязать это к числам, чтобы обращаться к элементам массива?
-        int taskTypeField = 1;
-        int nameField = 2;
-        int statusField = 3;
-        int descriptionField = 4;
-        int epicIdField = 5;
-        int id = Integer.parseInt(fields[idField]);
-        TaskType taskType = TaskType.valueOf(fields[taskTypeField]);
-        String name = fields[nameField];
-        Status status = Status.valueOf(fields[statusField]);
-        String description = fields[descriptionField];
+        int id = Integer.parseInt(fields[FileFields.ID.ordinal()]);
+        TaskType taskType = TaskType.valueOf(fields[FileFields.TASK_TYPE.ordinal()]);
+        String name = fields[FileFields.NAME.ordinal()];
+        Status status = Status.valueOf(fields[FileFields.STATUS.ordinal()]);
+        String description = fields[FileFields.DESCRIPTION.ordinal()];
         int epicId;
-        if (!fields[epicIdField].equals("null")) {
-            epicId = Integer.parseInt(fields[epicIdField]);
+        if (!fields[FileFields.EPIC_ID.ordinal()].equals("null")) {
+            epicId = Integer.parseInt(fields[FileFields.EPIC_ID.ordinal()]);
         } else {
             epicId = -1;
         }
