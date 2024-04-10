@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryTaskManagerTest {
     HistoryManager historyManager = Managers.getDefaultHistoryManager();
-    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager);
+    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
 
     @Test
     void shouldBeEqualWhenSetId() {
-        Task task = taskManager.create(new Task());
+        Task task = taskManager.createTask(new Task());
         int id = 10;
         task.setId(id);
         assertEquals(id, task.getId(), "getId должен выдавать верный id после изменения через сеттер");
@@ -23,7 +23,7 @@ public class InMemoryTaskManagerTest {
     @Test
     void shouldBeCreateAndSearchAnyType() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Description", Status.NEW));
-        Task task = taskManager.create(new Task("Task", "Description", Status.NEW));
+        Task task = taskManager.createTask(new Task("Task", "Description", Status.NEW));
         SubTask subTask = taskManager.createSubTask(new SubTask("SubTask", "Description", Status.NEW,
                 epic.getId()));
         int epicId = epic.getId();
