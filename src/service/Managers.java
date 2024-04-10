@@ -1,8 +1,8 @@
 package service;
 
 public class Managers {
-    public static FileBackedTaskManager getDefaultTaskManager(HistoryManager historyManager) {
-        return new FileBackedTaskManager(historyManager);
+    public static FileBackedTaskManager getDefaultTaskManager(HistoryManager historyManager, String filePath) {
+        return new FileBackedTaskManager(historyManager, filePath);
     }
 
     public static HistoryManager getDefaultHistoryManager() {

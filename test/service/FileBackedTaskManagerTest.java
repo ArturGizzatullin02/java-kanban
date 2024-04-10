@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class FileBackedTaskManagerTest {
     HistoryManager historyManager = Managers.getDefaultHistoryManager();
-    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager);
+    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
 
     @Test
     void shouldBeEqualWhenSetId() {
@@ -41,5 +41,23 @@ public class FileBackedTaskManagerTest {
         File notEmptyFile = new File("C:\\Users\\1\\IdeaProjects\\java-kanban\\rsc\\tasks.csv");
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(notEmptyFile);
         assertNotNull(fileBackedTaskManager, "Менеджер должен быть инициализирован");
+    }
+
+    @Test
+    public void loadTest() {
+        try {
+            File testFile = File.createTempFile("temp", ".csv");
+            TaskManager taskManagerReload = FileBackedTaskManager.loadFromFile(testFile);
+            System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
+            taskManagerReload.createTask(new Task("testTask1", "description", Status.NEW));
+            taskManagerReload.createTask(new Task("testTask2", "description", Status.NEW));
+            taskManagerReload.createTask(new Task("testTask3", "description", Status.NEW));
+            System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
+            TaskManager taskManagerReloadFromTestFile = FileBackedTaskManager.loadFromFile(testFile);
+            System.out.println("Все задачи нового тестового менеджера, загруженные из тестового файла: "
+                    + taskManagerReloadFromTestFile.getAllTasks());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

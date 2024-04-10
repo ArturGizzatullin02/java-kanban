@@ -14,12 +14,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static final String TASK_CSV = "rsc/tasks.csv";
     File file;
 
-    public FileBackedTaskManager() {
-        this(Managers.getDefaultHistoryManager());
+    public FileBackedTaskManager(String filePath) {
+        this(Managers.getDefaultHistoryManager(), filePath);
     }
 
-    public FileBackedTaskManager(HistoryManager historyManager) {
-        this(historyManager, new File(TASK_CSV));
+    public FileBackedTaskManager(HistoryManager historyManager, String filePath) {
+        this(historyManager, new File(filePath));
     }
 
     public FileBackedTaskManager(File file) {

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class EpicTest {
     HistoryManager historyManager = Managers.getDefaultHistoryManager();
-    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager);
+    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
     Epic epic1 = taskManager.createEpic(new Epic("Task", "Description", Status.NEW));
     SubTask subTask1 = taskManager.createSubTask(new SubTask("SubTask1", "Descr", Status.NEW, epic1.getId()));
     Epic epic2 = taskManager.createEpic(new Epic("Task", "Description", Status.NEW));

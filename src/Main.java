@@ -2,19 +2,15 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import service.FileBackedTaskManager;
 import service.HistoryManager;
 import service.Managers;
 import service.TaskManager;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) {
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
-        TaskManager taskManager = Managers.getDefaultTaskManager(historyManager);
+        TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
         Task task1 = taskManager.createTask(new Task("task1", "description",
                 Status.NEW));
         Task task2 = taskManager.createTask(new Task("task2", "description", Status.NEW));
@@ -84,20 +80,5 @@ public class Main {
 
         taskManager.deleteTaskById(taskFromManager.getId());
         System.out.println("Delete: " + task);
-
-        try {
-            File testFile = File.createTempFile("temp", ".csv");
-            TaskManager taskManagerReload = FileBackedTaskManager.loadFromFile(testFile);
-            System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
-            taskManagerReload.createTask(new Task("testTask1", "description", Status.NEW));
-            taskManagerReload.createTask(new Task("testTask2", "description", Status.NEW));
-            taskManagerReload.createTask(new Task("testTask3", "description", Status.NEW));
-            System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
-            TaskManager taskManagerReloadFromTestFile = FileBackedTaskManager.loadFromFile(testFile);
-            System.out.println("Все задачи нового тестового менеджера, загруженные из тестового файла: "
-                    + taskManagerReloadFromTestFile.getAllTasks());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

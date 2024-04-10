@@ -27,6 +27,10 @@ public class Epic extends Task {
         this.subTasksId = subTasksId;
     }
 
+    public void setSubTask(SubTask subTask) {
+        subTasksId.add(subTask.getId());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

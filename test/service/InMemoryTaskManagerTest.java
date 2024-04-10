@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryTaskManagerTest {
     HistoryManager historyManager = Managers.getDefaultHistoryManager();
-    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager);
+    TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
 
     @Test
     void shouldBeEqualWhenSetId() {
