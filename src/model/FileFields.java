@@ -7,4 +7,6 @@ public enum FileFields {
     STATUS,
     DESCRIPTION,
     EPIC_ID,
+    DURATION,
+    START_TIME,
 }
