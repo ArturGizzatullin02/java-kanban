@@ -86,10 +86,10 @@ public class InMemoryTaskManager implements TaskManager {
     public Task createTask(Task task) {
         task.setId(generateId());
         tasks.put(task.getId(), task);
-        prioritizedTasks.add(task);
         getPrioritizedTasks().stream()
                 .filter(taskForValidate -> taskForValidate.getId() != task.getId())
                 .forEach(taskForValidate -> isTasksCrossing(task, taskForValidate));
+        prioritizedTasks.add(task);
         return task;
     }
 
@@ -101,12 +101,12 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.put(subTask.getId(), subTask);
         calculateEpicTime(epic);
         epic.setStatus(calculateEpicStatus(epic));
-        prioritizedTasks.add(subTask);
         getPrioritizedTasks().forEach((taskForValidate) -> {
             if (subTask.getId() != taskForValidate.getId()) {
                 isTasksCrossing(subTask, taskForValidate);
             }
         });
+        prioritizedTasks.add(subTask);
         return subTask;
     }
 
