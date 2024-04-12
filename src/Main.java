@@ -6,23 +6,31 @@ import service.HistoryManager;
 import service.Managers;
 import service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
 
     public static void main(String[] args) {
         HistoryManager historyManager = Managers.getDefaultHistoryManager();
         TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, "rsc/tasks.csv");
         Task task1 = taskManager.createTask(new Task("task1", "description",
-                Status.NEW));
-        Task task2 = taskManager.createTask(new Task("task2", "description", Status.NEW));
+                Status.NEW, Duration.ofMinutes(50)
+                , LocalDateTime.of(2024, 4, 10, 23, 0, 0)));
+        Task task2 = taskManager.createTask(new Task("task2", "description", Status.NEW, Duration.ofMinutes(30)
+                , LocalDateTime.of(2024, 4, 15, 18, 45, 0)));
         Epic epic1 = taskManager.createEpic(new Epic("epic1", "description", Status.NEW));
         Epic epic2 = taskManager.createEpic(new Epic("epic2", "description", Status.NEW));
         Epic epic3 = taskManager.createEpic(new Epic("epic3", "description", Status.NEW));
         SubTask subTask1 = taskManager.createSubTask(new SubTask("subTask1ForEpic1", "description",
-                Status.NEW, epic1.getId()));
+                Status.NEW, epic1.getId(), Duration.ofMinutes(90)
+                , LocalDateTime.of(2024, 4, 17, 17, 16, 0)));
         SubTask subTask2 = taskManager.createSubTask(new SubTask("subTask2ForEpic1", "description",
-                Status.NEW, epic1.getId()));
+                Status.NEW, epic1.getId(), Duration.ofMinutes(40)
+                , LocalDateTime.of(2024, 4, 17, 22, 50, 0)));
         SubTask subTask3 = taskManager.createSubTask(new SubTask("subTask3ForEpic1",
-                "description", Status.NEW, epic1.getId()));
+                "description", Status.NEW, epic1.getId(), Duration.ofMinutes(50)
+                , LocalDateTime.of(2024, 4, 17, 7, 40, 0)));
         System.out.println();
         System.out.println("Задача с id 1:");
         System.out.println(taskManager.getTaskById(1));
@@ -80,5 +88,6 @@ public class Main {
 
         taskManager.deleteTaskById(taskFromManager.getId());
         System.out.println("Delete: " + task);
+        System.out.println(taskManager.getPrioritizedTasks());
     }
 }

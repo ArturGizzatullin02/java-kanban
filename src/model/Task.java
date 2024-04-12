@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +9,9 @@ public class Task {
     private String description;
     private int id;
     private Status Status;
+    private Duration duration;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @Override
     public boolean equals(Object o) {
@@ -23,14 +28,23 @@ public class Task {
         return Objects.hash(name, description, Status);
     }
 
-    public Task() {
-
-    }
 
     public Task(String name, String description, Status Status) {
         this.name = name;
         this.description = description;
         this.Status = Status;
+        this.duration = Duration.ofMinutes(0);
+        this.startTime = LocalDateTime.now();
+        this.endTime = startTime.plus(duration);
+    }
+
+    public Task(String name, String description, Status Status, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.Status = Status;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
     }
 
     public TaskType getType() {
@@ -73,6 +87,30 @@ public class Task {
         return null;
     }
 
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -80,6 +118,9 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", Status=" + Status +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }

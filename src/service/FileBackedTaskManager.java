@@ -1,10 +1,13 @@
 package service;
 
 import exception.ManagerSaveException;
+import exception.NotFoundException;
 import model.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 writer.write(toString(entry.getValue()));
@@ -64,7 +67,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
-                + task.getDescription() + "," + task.getEpicId();
+                + task.getDescription() + "," + task.getEpicId() + "," + task.getDuration().toMinutes() + "," + task.getStartTime();
     }
 
     private Task fromString(String value) {
@@ -80,13 +83,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else {
             epicId = -1;
         }
+        Duration duration = Duration.ofMinutes(Integer.parseInt(fields[FileFields.DURATION.ordinal()]));
+        LocalDateTime startTime = LocalDateTime.parse(fields[FileFields.START_TIME.ordinal()]);
         switch (taskType) {
             case TASK:
-                Task task = new Task(name, description, status);
+                Task task = new Task(name, description, status, duration, startTime);
                 task.setId(id);
                 return task;
             case SUBTASK:
-                SubTask subTask = new SubTask(name, description, status, epicId);
+                SubTask subTask = new SubTask(name, description, status, epicId, duration, startTime);
                 subTask.setId(id);
                 return subTask;
             case EPIC:
@@ -124,24 +129,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     break;
                 }
                 Task task = fromString(string);
-                int idFromFile = task.getId();
-                switch (task.getType()) {
-                    case TASK:
-                        task.setId(idFromFile);
-                        tasks.put(task.getId(), task);
-                        break;
-                    case SUBTASK:
-                        task.setId(idFromFile);
-                        subTasks.put(task.getId(), (SubTask) task);
-                        break;
-                    case EPIC:
-                        task.setId(idFromFile);
-                        task.setStatus(Status.NEW);
-                        epics.put(task.getId(), (Epic) task);
-                        break;
-                }
-                if (idFromFile > maxId) {
-                    maxId = idFromFile;
+                try {
+                    int idFromFile = task.getId();
+                    switch (task.getType()) {
+                        case TASK:
+                            task.setId(idFromFile);
+                            tasks.put(task.getId(), task);
+                            break;
+                        case SUBTASK:
+                            task.setId(idFromFile);
+                            subTasks.put(task.getId(), (SubTask) task);
+                            break;
+                        case EPIC:
+                            task.setId(idFromFile);
+                            task.setStatus(Status.NEW);
+                            epics.put(task.getId(), (Epic) task);
+                            calculateEpicTime((Epic) task);
+                            break;
+                    }
+                    if (idFromFile > maxId) {
+                        maxId = idFromFile;
+                    }
+                } catch (NullPointerException e) {
+                    throw new NotFoundException("Задача с id: " + id + " не найдена");
                 }
             }
             for (SubTask subTask : subTasks.values()) {
