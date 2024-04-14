@@ -25,7 +25,7 @@ public class EpicTest {
         Epic epic2 = taskManager.createEpic(new Epic("Task", "Description", Status.NEW));
         SubTask subTask2 = taskManager.createSubTask(new SubTask("SubTask2", "Descr", Status.NEW, epic2.getId()
                 , Duration.ofMinutes(90)
-                , LocalDateTime.of(2024, 4, 17, 17, 16, 0)));
+                , LocalDateTime.of(2024, 4, 17, 20, 16, 0)));
         assertNotEquals(epic1, epic2, "Эпики(даже, если все остальное совпадает) с разными сабтасками не должны совпадать");
     }
 

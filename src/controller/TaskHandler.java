@@ -3,21 +3,12 @@ package controller;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import exception.ManagerSaveException;
-import exception.NotFoundException;
-import model.Status;
 import model.Task;
 import service.HistoryManager;
 import service.TaskManager;
-
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
-import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 public class TaskHandler extends TaskTrackerHandler implements HttpHandler {
     public TaskHandler(Gson gson, HistoryManager historyManager, TaskManager taskManager) {
         super(gson, historyManager, taskManager);
@@ -51,13 +42,10 @@ public class TaskHandler extends TaskTrackerHandler implements HttpHandler {
                             int id = Integer.parseInt(splitBody[1].substring(7, splitBody[1].length() - 1));
                             taskManager.updateTask(gson.fromJson(requestBody, Task.class));
                             writeResponse(exchange, "Задача с id " + id + " обновлена", 200);
-                            Task task = taskManager.getTaskById(id);
-                            task.setEndTime(task.getStartTime().plus(task.getDuration()));
                         } else {
                             Task task = gson.fromJson(requestBody, Task.class);
                             taskManager.createTask(task);
-                            task.setEndTime(task.getStartTime().plus(task.getDuration()));
-                            writeResponse(exchange, "Задача успешно создана", 201);
+                            writeResponse(exchange, "Задача с id " + task.getId() +" успешно создана", 201);
                         }
                     }
                 }

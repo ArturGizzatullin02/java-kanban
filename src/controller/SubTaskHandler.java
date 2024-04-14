@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.SubTask;
-import model.Task;
 import service.HistoryManager;
 import service.TaskManager;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -45,12 +43,9 @@ public class SubTaskHandler extends TaskTrackerHandler implements HttpHandler {
                             int id = Integer.parseInt(splitBody[1].substring(7, splitBody[1].length() - 1));
                             taskManager.updateSubTask(gson.fromJson(requestBody, SubTask.class));
                             writeResponse(exchange, "Задача с id " + id + " обновлена", 200);
-                            SubTask subTask = taskManager.getSubTaskById(id);
-                            subTask.setEndTime(subTask.getStartTime().plus(subTask.getDuration()));
                         } else {
                             SubTask subTask = gson.fromJson(requestBody, SubTask.class);
-                            taskManager.createTask(subTask);
-                            subTask.setEndTime(subTask.getStartTime().plus(subTask.getDuration()));
+                            taskManager.createSubTask(subTask);
                             writeResponse(exchange, "Задача успешно создана", 201);
                         }
                     }

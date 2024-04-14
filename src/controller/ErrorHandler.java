@@ -1,13 +1,10 @@
 package controller;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import exception.ManagerSaveException;
 import exception.NotFoundException;
 import exception.ValidationException;
-import service.HistoryManager;
-import service.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
