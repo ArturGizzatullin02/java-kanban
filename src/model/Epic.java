@@ -13,6 +13,7 @@ public class Epic extends Task {
         subTasksId = new ArrayList<>();
     }
 
+
     public TaskType getType() {
         return TaskType.EPIC;
     }

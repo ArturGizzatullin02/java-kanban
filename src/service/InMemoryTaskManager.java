@@ -137,7 +137,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(task);
         return task;
@@ -147,7 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
         if (epic == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(epic);
         return epic;
@@ -157,7 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
     public SubTask getSubTaskById(int id) {
         SubTask subTask = subTasks.get(id);
         if (subTask == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(subTask);
         return subTask;
@@ -165,6 +165,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) {
+//        if (tasks.containsV) {
+//            throw new NotFoundException("Задача не существует");
+//        }
+        prioritizedTasks.remove(tasks.get(task.getId()));
         tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
         return task;
@@ -172,6 +176,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
+        if (epic == null) {
+            throw new NotFoundException("Задача не существует");
+        }
         Epic saved = epics.get(epic.getId());
         epic.setStatus(calculateEpicStatus(saved));
         calculateEpicTime(epic);
@@ -187,6 +194,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         prioritizedTasks.remove(tasks.get(id));
+        Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
+        }
         tasks.remove(id);
         if (!historyManager.getHistory().isEmpty()) {
             historyManager.remove(id);

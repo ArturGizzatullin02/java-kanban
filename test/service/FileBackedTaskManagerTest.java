@@ -44,7 +44,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
     @Test
     public void test() throws IOException {
         File emptyFile = File.createTempFile("test", ".csv");
-        File notEmptyFile = new File("C:\\Users\\1\\IdeaProjects\\java-kanban\\rsc\\tasks.csv");
+        File notEmptyFile = new File("/Users/artur/IdeaProjects/java-kanban/rsc/tasks.csv");
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(notEmptyFile);
         assertNotNull(fileBackedTaskManager, "Менеджер должен быть инициализирован");
     }

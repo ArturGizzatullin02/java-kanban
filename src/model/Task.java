@@ -29,7 +29,7 @@ public class Task {
     }
 
 
-    public Task(String name, String description, Status Status) {
+    protected Task(String name, String description, Status Status) {
         this.name = name;
         this.description = description;
         this.Status = Status;
