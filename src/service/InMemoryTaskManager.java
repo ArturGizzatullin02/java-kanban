@@ -85,28 +85,51 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task task) {
         task.setId(generateId());
+        if (task.getStartTime() != null && task.getDuration() != null) {
+            task.setEndTime(task.getStartTime().plus(task.getDuration()));
+        }
+        if (!tasks.isEmpty() && !prioritizedTasks.isEmpty()) {
+            for (Task taskForValidate : getPrioritizedTasks()) {
+                if (taskForValidate.getId() != task.getId()) {
+                    if (taskForValidate.getStartTime() != null && taskForValidate.getEndTime() != null
+                            && task.getStartTime() != null && task.getEndTime() != null) {
+                        isTasksCrossing(task, taskForValidate);
+                    }
+                }
+            }
+        }
         tasks.put(task.getId(), task);
-        getPrioritizedTasks().stream()
-                .filter(taskForValidate -> taskForValidate.getId() != task.getId())
-                .forEach(taskForValidate -> isTasksCrossing(task, taskForValidate));
-        prioritizedTasks.add(task);
+        if (task.getStartTime() != null && task.getEndTime() != null) {
+            prioritizedTasks.add(task);
+        }
         return task;
     }
 
     @Override
     public SubTask createSubTask(SubTask subTask) {
         subTask.setId(generateId());
+        if (subTask.getStartTime() != null || subTask.getDuration() != null) {
+            subTask.setEndTime(subTask.getStartTime().plus(subTask.getDuration()));
+        }
+        if (!subTasks.isEmpty() && !prioritizedTasks.isEmpty()) {
+            for (Task taskForValidate : getPrioritizedTasks()) {
+                if (taskForValidate.getId() != subTask.getId()) {
+                    if (taskForValidate.getStartTime() != null && taskForValidate.getEndTime() != null
+                            && subTask.getStartTime() != null && subTask.getEndTime() != null) {
+                        isTasksCrossing(subTask, taskForValidate);
+                    }
+                }
+            }
+        }
+        subTasks.put(subTask.getId(), subTask);
+        if (subTask.getStartTime() != null && subTask.getEndTime() != null) {
+            prioritizedTasks.add(subTask);
+        }
         Epic epic = epics.get(subTask.getEpicId());
         epic.setSubTask(subTask);
         subTasks.put(subTask.getId(), subTask);
         calculateEpicTime(epic);
         epic.setStatus(calculateEpicStatus(epic));
-        getPrioritizedTasks().forEach((taskForValidate) -> {
-            if (subTask.getId() != taskForValidate.getId()) {
-                isTasksCrossing(subTask, taskForValidate);
-            }
-        });
-        prioritizedTasks.add(subTask);
         return subTask;
     }
 
@@ -114,6 +137,9 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic createEpic(Epic epic) {
         epic.setId(generateId());
         epic.setStatus(Status.NEW);
+        epic.setDuration(Duration.ofMinutes(0));
+        epic.setStartTime(LocalDateTime.now());
+        epic.setEndTime(epic.getStartTime().plus(epic.getDuration()));
         epics.put(epic.getId(), epic);
         return epic;
     }
@@ -137,7 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(task);
         return task;
@@ -147,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
         if (epic == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(epic);
         return epic;
@@ -157,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
     public SubTask getSubTaskById(int id) {
         SubTask subTask = subTasks.get(id);
         if (subTask == null) {
-            throw new NotFoundException("Задача с id: " + id + "не найдена");
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
         }
         historyManager.add(subTask);
         return subTask;
@@ -165,6 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask(Task task) {
+        prioritizedTasks.remove(tasks.get(task.getId()));
         tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
         return task;
@@ -187,6 +214,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         prioritizedTasks.remove(tasks.get(id));
+        Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Задача с id: " + id + " не найдена");
+        }
         tasks.remove(id);
         if (!historyManager.getHistory().isEmpty()) {
             historyManager.remove(id);
@@ -275,6 +306,8 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (task1EndTime.isBefore(task2EndTime) && task1StartTime.isAfter(task2StartTime)) {
             throw new ValidationException("Задачи с id [" + task1.getId() + "] , [" + task2.getId() + "] пересекаются во времени");
         } else if (task2EndTime.isBefore(task1EndTime) && task2StartTime.isAfter(task1StartTime)) {
+            throw new ValidationException("Задачи с id [" + task1.getId() + "] , [" + task2.getId() + "] пересекаются во времени");
+        } else if (task1StartTime.equals(task2StartTime)) {
             throw new ValidationException("Задачи с id [" + task1.getId() + "] , [" + task2.getId() + "] пересекаются во времени");
         }
     }

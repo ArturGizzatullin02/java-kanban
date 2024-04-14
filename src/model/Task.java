@@ -28,14 +28,13 @@ public class Task {
         return Objects.hash(name, description, Status);
     }
 
+    public Task() {
 
+    }
     public Task(String name, String description, Status Status) {
         this.name = name;
         this.description = description;
         this.Status = Status;
-        this.duration = Duration.ofMinutes(0);
-        this.startTime = LocalDateTime.now();
-        this.endTime = startTime.plus(duration);
     }
 
     public Task(String name, String description, Status Status, Duration duration, LocalDateTime startTime) {

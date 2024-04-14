@@ -20,7 +20,7 @@ public class SubTaskTest {
     Epic epic2 = taskManager.createEpic(new Epic("Task2", "Description2", Status.NEW));
     SubTask subTask2 = taskManager.createSubTask(new SubTask("SubTask", "Descr", Status.NEW, epic2.getId()
             , Duration.ofMinutes(90)
-            , LocalDateTime.of(2024, 4, 17, 17, 16, 0)));
+            , LocalDateTime.of(2024, 4, 21, 17, 16, 0)));
 
     @Test
     public void shouldBeNotEqualIfEpicsNotEqual() {
