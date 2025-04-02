@@ -100,7 +100,8 @@ abstract class TaskManagerTest {
 
     @Test
     public void shouldBeEqualsWhenUpdatedTask() {
-        Task task = taskManager.createTask(new Task("Новая задача", "описание", Status.NEW));
+        Task task = taskManager.createTask(new Task("Новая задача", "описание", Status.NEW, Duration.ofMinutes(30)
+        , LocalDateTime.of(2024, 4, 11, 12, 30 ,0)));
         Task taskFromManager = taskManager.getTaskById(task.getId());
         taskFromManager.setName("New name");
         taskManager.updateTask(taskFromManager);
@@ -116,7 +117,7 @@ abstract class TaskManagerTest {
                 , LocalDateTime.of(2024, 4, 11, 23, 0, 0)));
         SubTask subTaskFromManager = taskManager.getSubTaskById(subTask.getId());
         subTaskFromManager.setName("New name");
-        taskManager.updateTask(subTaskFromManager);
+        taskManager.updateSubTask(subTaskFromManager);
         assertEquals(taskManager.getSubTaskById(subTask.getId()), taskManager.getSubTaskById(subTaskFromManager.getId()));
     }
 

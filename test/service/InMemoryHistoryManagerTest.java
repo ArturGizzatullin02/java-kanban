@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +26,8 @@ public class InMemoryHistoryManagerTest {
     public void shouldBeNullIfRemove() throws IOException {
         File testFile = File.createTempFile("temp", ".csv");
         TaskManager taskManager = Managers.getDefaultTaskManager(historyManager, testFile.getAbsolutePath());
-        Task task = taskManager.createTask(new Task("Task", "Description", Status.NEW));
+        Task task = taskManager.createTask(new Task("Task", "Description", Status.NEW, Duration.ofMinutes(30)
+                , LocalDateTime.of(2024, 4, 11, 10, 30, 0)));
         Task task2 = taskManager.createTask(new Task("Task2", "Description", Status.NEW));
         Task task3 = taskManager.createTask(new Task("Task3", "Description", Status.NEW));
         Task task4 = taskManager.createTask(new Task("Task4", "Description", Status.NEW));

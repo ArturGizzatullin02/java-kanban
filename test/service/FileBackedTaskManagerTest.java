@@ -32,7 +32,6 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
     @Test
     void shouldBeCreateAndSearchAnyType() {
         Epic epic = taskManager.createEpic(new Epic("Epic", "Description", Status.NEW));
-        Task task = taskManager.createTask(new Task("Task", "Description", Status.NEW));
         SubTask subTask = taskManager.createSubTask(new SubTask("SubTask", "Description", Status.NEW,
                 epic.getId(), Duration.ofMinutes(90)
                 , LocalDateTime.of(2024, 4, 17, 17, 16, 0)));
@@ -44,7 +43,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
     @Test
     public void test() throws IOException {
         File emptyFile = File.createTempFile("test", ".csv");
-        File notEmptyFile = new File("C:\\Users\\1\\IdeaProjects\\java-kanban\\rsc\\tasks.csv");
+        File notEmptyFile = new File("/Users/artur/IdeaProjects/java-kanban/rsc/tasks.csv");
         FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(notEmptyFile);
         assertNotNull(fileBackedTaskManager, "Менеджер должен быть инициализирован");
     }
@@ -55,9 +54,12 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
             File testFile = File.createTempFile("temp", ".csv");
             TaskManager taskManagerReload = FileBackedTaskManager.loadFromFile(testFile);
             System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
-            taskManagerReload.createTask(new Task("testTask1", "description", Status.NEW));
-            taskManagerReload.createTask(new Task("testTask2", "description", Status.NEW));
-            taskManagerReload.createTask(new Task("testTask3", "description", Status.NEW));
+            taskManagerReload.createTask(new Task("testTask1", "description", Status.NEW, Duration.ofMinutes(30)
+                    , LocalDateTime.of(2024, 12, 4, 12, 30, 0)));
+            taskManagerReload.createTask(new Task("testTask2", "description", Status.NEW, Duration.ofMinutes(30)
+                    , LocalDateTime.of(2024, 12, 4, 15, 30, 0)));
+            taskManagerReload.createTask(new Task("testTask3", "description", Status.NEW, Duration.ofMinutes(30)
+                    , LocalDateTime.of(2024, 12, 4, 18, 30, 0)));
             System.out.println("Все задачи тестового менеджера: " + taskManagerReload.getAllTasks());
             TaskManager taskManagerReloadFromTestFile = FileBackedTaskManager.loadFromFile(testFile);
             System.out.println("Все задачи нового тестового менеджера, загруженные из тестового файла: "
